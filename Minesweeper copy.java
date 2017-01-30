@@ -43,16 +43,14 @@ public class Minesweeper
 
 	private void play()
 	{
-		Scanner reader = new Scanner(System.in);
+		
 		int r, c, guesses;
 		boolean alive = true;
 		guesses = 0;
 		while (alive && guesses < rows*cols-mines)
 		{
 			printBoard();
-			getRow();
-			getCol();
-			alive = guess(r-1, c-1);
+			alive = guess(getRow(), getCol());
 			guesses++;
 			spacesLeft--;
 		}
@@ -144,28 +142,32 @@ public class Minesweeper
 		}
 	} */
 
-	private void getRow()
+	private int getRow()
 	{
+		Scanner reader = new Scanner(System.in);
 		System.out.print("row: ");
-		r = reader.nextInt();
+		int r = reader.nextInt();
 		while (!inBounds(r, rows))
 		{
 			System.out.println("Input row out of bounds.");
 			System.out.print("row: ");
 			r = reader.nextInt();
 		}
+		return r-1;
 	}
 
-	private void getCol()
+	private int getCol()
 	{
+		Scanner reader = new Scanner(System.in);
 		System.out.print("col: ");
-		c = reader.nextInt();
+		int c = reader.nextInt();
 		while (!inBounds(c, cols))
 		{
 			System.out.println("Input col out of bounds.");
 			System.out.print("col: ");
 			c = reader.nextInt();
 		}
+		return c-1;
 	}
 
 	private boolean inBounds(int num, int bound)
