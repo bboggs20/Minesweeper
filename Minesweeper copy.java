@@ -6,7 +6,7 @@ public class Minesweeper
 {
 	private boolean[][] minemap; //true if mine
 	private int[][] board; //number of mines nearby; -num if mine
-	private int mines, rows, cols;
+	private int mines, rows, cols, spacesLeft;
 	private String[][] state; //visual board
 
 	public static void main(String args[])
@@ -26,6 +26,7 @@ public class Minesweeper
 		mines = initM;
 		rows = initR;
 		cols = initC;
+		spacesLeft = rows*cols - mines;
 		if (mines > rows*cols)
 		{
 			System.out.println("Error: too many mines");
@@ -51,10 +52,23 @@ public class Minesweeper
 			printBoard();
 			System.out.print("row: ");
 			r = reader.nextInt();
+			while (!inBounds(r, rows))
+			{
+				System.out.println("Input row out of bounds.");
+				System.out.print("row: ");
+				r = reader.nextInt();
+			}
 			System.out.print("col: ");
 			c = reader.nextInt();
+			while (!inBounds(c, cols))
+			{
+				System.out.println("Input col out of bounds.");
+				System.out.print("col: ");
+				c = reader.nextInt();
+			}
 			alive = guess(r-1, c-1);
 			guesses++;
+			spacesLeft--;
 		}
 		if (alive)
 			winner();
@@ -68,7 +82,7 @@ public class Minesweeper
 		while (m > 0)
 		{
 			int r = (int)(rows*Math.random());
-			int c = (int)(rows*Math.random());
+			int c = (int)(cols*Math.random());
 			if (!minemap[r][c])
 			{
 				minemap[r][c] = true;
@@ -80,22 +94,22 @@ public class Minesweeper
 		{
 			for (int j=0; j<cols; j++)
 			{
-				if (minemap[j][i])
+				if (minemap[i][j])
 				{
 					for (int y=i-1; y<=i+1; y++)
 						for (int x=j-1; x<=j+1; x++)
 							if (x>=0 && y>=0 && x<cols && y<rows)
-								board[x][y] += 1;
-					board[j][i] = -rows*cols;
+								board[y][x] += 1;
+					board[i][j] = -rows*cols;
 				}
-				state[j][i] = "[]";
+				state[i][j] = "[]";
 			}
 		}
 	}
 
 	private void printBoard()
 	{
-		System.out.println("");
+		System.out.println("\n\n\n\n\n\n\n\n\n\n\nSpaces Left: " + spacesLeft + "\n");
 		for (int r=0; r<rows; r++)
 		{
 			for (int c=0; c<cols; c++)
@@ -144,6 +158,11 @@ public class Minesweeper
 		}
 	} */
 
+	private boolean inBounds(int num, int bound)
+	{
+		return num >= 1 && num <= bound;
+	}
+
 	private void winner()
 	{
 		for (int r=0; r<rows; r++)
@@ -151,7 +170,7 @@ public class Minesweeper
 			for (int c=0; c<cols; c++)
 			{
 				if (minemap[r][c])
-					System.out.print("*  ");
+					System.out.print("* ");
 				else
 					System.out.print("- ");
 			}
